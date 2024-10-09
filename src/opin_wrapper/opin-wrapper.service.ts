@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Model, Document } from "mongoose";
+import { FindAllDto } from 'src/lib/find.dto';
 
 @Injectable()
 export class MongooseWrapperService {
@@ -10,21 +11,14 @@ export class MongooseWrapperService {
   // Fetch all documents with pagination, sorting, field selection, etc.
   async findAll<T extends Document>(
     model: Model<T>,
-    filter: {
-      query?: any; // Filter conditions
-      sort?: any; // Sorting condition
-      only?: string; // Fields to return
-      skip?: number; // Page number for pagination
-      limit?: number; // Number of documents per page
-      include?: string | any; // Population fields
-    } = {},
+    filter: FindAllDto,
   ): Promise<{ data: T[]; count: number }> {
-    this.logger.log("Fetching all documents with optional features");
+    this.logger.log('Fetching all documents with optional features');
 
     const {
       query = {}, // Default to no filtering
       sort = {}, // Default to no sorting
-      only = "", // Default to no field selection
+      only = '', // Default to no field selection
       // eslint-disable-next-line prefer-const
       skip = 0, // Default to first page
       // eslint-disable-next-line prefer-const
@@ -33,7 +27,7 @@ export class MongooseWrapperService {
     } = filter;
 
     try {
-      const queryFilter = { ...query, deleted_at: "false" };
+      const queryFilter = { ...query, deleted_at: 'false' };
       const sortBy = { ...sort, updated_at: -1 };
       // Fetch total count of documents based on the query filter (ignores pagination)
       const count = await model.countDocuments(queryFilter);
@@ -49,7 +43,7 @@ export class MongooseWrapperService {
       // Handle population of fields
       if (include && Array.isArray(include)) {
         include.forEach((field) => {
-          if (typeof field === "string") {
+          if (typeof field === 'string') {
             mongooseQuery = mongooseQuery.populate(field); // Simple populate
           } else if (field.path) {
             mongooseQuery = mongooseQuery.populate(field); // Populate with path and select
@@ -87,7 +81,7 @@ export class MongooseWrapperService {
     model: Model<T>,
     createDto: any,
   ): Promise<T> {
-    this.logger.log("Creating a new document");
+    this.logger.log('Creating a new document');
     try {
       const createdModel = new model(createDto);
       return await createdModel.save();

@@ -12,40 +12,41 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO, UpdateUserDTO } from './users.dto';
+import { FindAllDto } from 'src/lib/find.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get() // GET /users or /users?role=value
-  findAll(@Query('role') role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
-    return this.usersService.findAll(role);
+  findAll(@Query() query: FindAllDto) {
+    return this.usersService.findAll(query);
   }
 
-  @Get(':id') // GET /users/:id
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
-  }
+  // @Get(':id') // GET /users/:id
+  // findOne(@Param('id', ParseIntPipe) id: number) {
+  //   return this.usersService.findOne(id);
+  // }
 
-  @Post() // POST /users
-  create(
-    @Body(ValidationPipe)
-    createUserDTO: CreateUserDTO,
-  ) {
-    return this.usersService.create(createUserDTO);
-  }
+  // @Post() // POST /users
+  // create(
+  //   @Body(ValidationPipe)
+  //   createUserDTO: CreateUserDTO,
+  // ) {
+  //   return this.usersService.create(createUserDTO);
+  // }
 
-  @Patch(':id') // PATCH /users/:id
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body()
-    updateUserDTO: UpdateUserDTO,
-  ) {
-    return this.usersService.update(id, updateUserDTO);
-  }
+  // @Patch(':id') // PATCH /users/:id
+  // update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body()
+  //   updateUserDTO: UpdateUserDTO,
+  // ) {
+  //   return this.usersService.update(id, updateUserDTO);
+  // }
 
-  @Delete(':id') // DELETE /users/:id
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.delete(id);
-  }
+  // @Delete(':id') // DELETE /users/:id
+  // delete(@Param('id', ParseIntPipe) id: number) {
+  //   return this.usersService.delete(id);
+  // }
 }

@@ -1,80 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDTO, UpdateUserDTO } from './users.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from 'src/schemas/user.schema';
+import { MongooseWrapperService } from 'src/opin_wrapper/opin-wrapper.service';
+import { FindAllDto } from 'src/lib/find.dto';
 
 @Injectable()
 export class UsersService {
-  private users = [
-    {
-      id: 1,
-      name: 'Leanne Graham',
-      email: 'Sincere@april.biz',
-      role: 'INTERN',
-    },
-    {
-      id: 2,
-      name: 'Ervin Howell',
-      email: 'Shanna@melissa.tv',
-      role: 'INTERN',
-    },
-    {
-      id: 3,
-      name: 'Clementine Bauch',
-      email: 'Nathan@yesenia.net',
-      role: 'ENGINEER',
-    },
-    {
-      id: 4,
-      name: 'Patricia Lebsack',
-      email: 'Julianne.OConner@kory.org',
-      role: 'ENGINEER',
-    },
-    {
-      id: 5,
-      name: 'Chelsey Dietrich',
-      email: 'Lucio_Hettinger@annie.ca',
-      role: 'ADMIN',
-    },
-  ];
+  constructor(
+    @InjectModel('User') private userModel: Model<User>,
+    private readonly mongooseWrapperService: MongooseWrapperService,
+  ) {}
 
-  findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
-    if (role) {
-      return this.users.filter((user) => user.role === role);
-    }
-    return this.users;
+  findAll(query: FindAllDto) {
+    return this.mongooseWrapperService.findAll(this.userModel, query);
   }
 
-  findOne(id: number) {
-    const user = this.users.find((user) => user.id === id);
+  // findOne(id: number) {
+  //   const user = this.users.find((user) => user.id === id);
 
-    return user;
-  }
+  //   return user;
+  // }
 
-  create(user: CreateUserDTO) {
-    const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
-    const newUser = {
-      id: usersByHighestId[0].id + 1,
-      ...user,
-    };
-    this.users.push(newUser);
-    return newUser;
-  }
+  // create(user: CreateUserDTO) {
+  //   const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
+  //   const newUser = {
+  //     id: usersByHighestId[0].id + 1,
+  //     ...user,
+  //   };
+  //   this.users.push(newUser);
+  //   return newUser;
+  // }
 
-  update(id: number, updatedUser: UpdateUserDTO) {
-    this.users = this.users.map((user) => {
-      if (user.id === id) {
-        return { ...user, ...updatedUser };
-      }
-      return user;
-    });
+  // update(id: number, updatedUser: UpdateUserDTO) {
+  //   this.users = this.users.map((user) => {
+  //     if (user.id === id) {
+  //       return { ...user, ...updatedUser };
+  //     }
+  //     return user;
+  //   });
 
-    return this.findOne(id);
-  }
+  //   return this.findOne(id);
+  // }
 
-  delete(id: number) {
-    const removedUser = this.findOne(id);
+  // delete(id: number) {
+  //   const removedUser = this.findOne(id);
 
-    this.users = this.users.filter((user) => user.id !== id);
+  //   this.users = this.users.filter((user) => user.id !== id);
 
-    return removedUser;
-  }
+  //   return removedUser;
+  // }
 }

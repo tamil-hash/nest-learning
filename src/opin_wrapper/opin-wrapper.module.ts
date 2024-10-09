@@ -11,7 +11,8 @@ import mongoose from 'mongoose';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: async (): Promise<MongooseModuleOptions> => ({
-        uri: 'mongodb://localhost/code_execution',
+        uri: 'mongodb://localhost/27017',
+        dbName: 'learning',
       }),
       inject: [],
     }),
